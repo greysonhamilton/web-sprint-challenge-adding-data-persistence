@@ -1,6 +1,6 @@
-exports.up = function(knex) {
+exports.up = async function(knex) {
 
-    return knex.schema.createTable("projects", tbl => {
+    await knex.schema.createTable("projects", tbl => {
         tbl.increments("project_id")
         tbl.text("project_name").notNullable()
         tbl.text("project_description")
@@ -8,7 +8,7 @@ exports.up = function(knex) {
 
     })
 
-    .createTable("resources", tbl => {
+    await knex.schema.createTable("resources", tbl => {
 
       tbl.increments("resource_id")
       tbl.text("resource_name").unique().notNullable()
@@ -16,7 +16,7 @@ exports.up = function(knex) {
 
     })
 
-    .createTable("tasks", tbl => {
+    await knex.schema.createTable("tasks", tbl => {
 
         tbl.increments("task_id")
         tbl.text("task_description").notNullable()
@@ -26,21 +26,22 @@ exports.up = function(knex) {
 
     })
 
-    .createTable("project_recources", tbl => {
-        tbl.increments("project_rocources_id")
-        tbl.integer("recource_id").unsigned().notNullable().references("recource_id").inTable("Recource")
+    await knex.schema.createTable("project_recources", tbl => {
+
+        tbl.increments("project_resources_id")
+        tbl.integer("resources_id").unsigned().notNullable().references("resources_id").inTable("resources")
         tbl.integer("task_id").unsigned().notNullable().references("task_id").inTable("task")
         tbl.boolean("resource_viewed").defaultTo(true)
+
     })
 
   };
   
-  exports.down = function(knex) {
+  exports.down = async function(knex) {
 
-    return knex.schema
-        .dropTableIfExists("project_recources")
-        .dropTableIfExists("tasks")
-        .dropTableIfExists("resources")
-        .dropTableIfExists("projects")
+    await knex.schema.dropTableIfExists("project_recources")
+    await knex.schema.dropTableIfExists("tasks")
+    await knex.schema.dropTableIfExists("resources")
+    await knex.schema.dropTableIfExists("projects")
 
   };
